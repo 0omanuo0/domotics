@@ -67,12 +67,12 @@ class RegulacionTemp(object):
 		if(self.nivelUsFanc == 1):
 			print("FancNv1")
 			self.Power = True
-			fancCoil(1)
+			self.fancCoil(1)
 			pass#arrancar
 		elif(self.nivelUsFanc == 2):
 			print("FancNv2")
 			self.Power = True
-			fancCoil(2)
+			self.fancCoil(2)
 			pass#arrancar
 		elif(self.nivelUsFanc == 3):
 			print("FancNv3")
@@ -90,15 +90,15 @@ class RegulacionTemp(object):
 			self.comprobar()
 			pass
 	def comprobar(self):#guardar temperaturas de cada sitio
-		if(self.BufferErr.len() == 3):
-			print(self.BufferErr[self.BufferErr.len()-1])
-			self.parar()
+		if(len(self.BufferErr) == 3):
+			print(self.BufferErr[len(self.BufferErr)-1])
+			#self.parar()
 			return 0
 		else:
 			if(self.tempCondens > 15):#ya mirare
 				self.BufferErr.append("E3")
 				self.comprobar()
-			self.UsuarioVent()
+			self.UsuarioVent(1)
 
 a = RegulacionTemp()
 a.UsuarioVent(3)

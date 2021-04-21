@@ -6,13 +6,6 @@ import datetime
 import time
 import threading
 
-def brn(num):
-    print("hi", num)
-    lectura.escribirParam("manual", False)
-    lectura.escribirParam("parar", False)
-def br(num):
-    
-    print("ho", num)
 
 class App():
 
@@ -31,12 +24,24 @@ class App():
         self.label2.place(x=195, y=50)
         self.label3.place(x=5, y=230)
         self.separ1.place(x=5, y=95, bordermode=OUTSIDE, height=10, width=390)
-        self.zonas = leerZonas()
+        self.tab = []
+        self.tab_control.pack(expand=100, fill='both')
+        #self.reloj()
+    
+        self.root.mainloop()
+
+    def tabs(self):
+        self.zonas = read()
         if self.zonas == "error lectura":
             messagebox.showerror("Error", "Error lectura")
-            self.parar() 
+            #self.parar() 
         for x in range(len(self.zonas)):
-            exec("self.tab{} = ttk.Frame(self.tab_control)".format(x))
+            self.tab.append(ttk.Frame(self.tab_control))
+            self.tab_control.add(self.tab[x], text=str(x))
+            boton1 = ttk.Button(self.tab[x], text='manual', padding=(5,5), command= print("holaaa"))
+            boton1.place(x=95, y=135)
+            print("hola")
+            '''exec("self.tab{} = ".format(x))
             exec("self.tab_control.add(self.tab{}, text='{}')".format(x,self.zonas[x][0]))
             exec("self.boton1{} = ttk.Button(self.tab{}, text='manual', padding=(5,5), command= self.Rmanual)".format(x,x))
             exec("self.boton2{} = ttk.Button(self.tab{}, text='salir', padding=(5,5), command= self.parar)".format(x,x))
@@ -45,11 +50,8 @@ class App():
             exec("self.boton1{}.place(x=95, y=135)".format(x))
             exec("self.boton2{}.place(x=215, y=135)".format(x))
             exec("self.boton3{}.place(x=95,y=105)".format(x))
-            exec("self.boton4{}.place(x=215,y=105)".format(x))
-        self.tab_control.pack(expand=100, fill='both')
-        self.reloj()
-    
-        self.root.mainloop()
+            exec("self.boton4{}.place(x=215,y=105)".format(x))'''
+'''
     def reloj(self):
         self.label1.configure(text=time.strftime("%H : %M : %S    Dia: ")+str(datetime.datetime.today().weekday()+1))
         lec = leerParam()
@@ -92,13 +94,16 @@ class buclesRiego():
                 lectura.escribirParam("riego", False)
                 lectura.escribirParam("off", False)
                 lectura.escribirParam("manual", False)
-                quit()
+                quit()'''
 def mainApp():
     app = App()
+    
+mainApp()
+'''
 def bucles():
     a = buclesRiego(1)
 
 th1 = threading.Thread(target=mainApp, args=())
 th1.start()
 th2 = threading.Thread(target=bucles, args=())
-th2.start()
+th2.start()'''
