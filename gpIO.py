@@ -21,8 +21,8 @@ class confiGpio(object):
 		elif self.mod == 'in':
 			#GPIO.setup(self.GPIOPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 			print(self.GPIOPin, self.mod)
-			self.llmamar_pin(True)
-			self.llmamar_pin(False)
+			self.changeState(True)
+			self.changeState(False)
 		
 
 	def changeState(self, llamarPin):
