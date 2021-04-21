@@ -21,8 +21,11 @@ class confiGpio(object):
 		elif self.mod == 'in':
 			#GPIO.setup(self.GPIOPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 			print(self.GPIOPin, self.mod)
+			self.llmamar_pin(True)
+			self.llmamar_pin(False)
+		
 
-	def llmamar_pin(self, llamarPin):
+	def changeState(self, llamarPin):
 		if (llamarPin == True):#poner en HIGH/LOW el pin
 			self.estadoPin = True
 			#GPIO.output(self.GPIOPin,GPIO.LOW)
@@ -31,7 +34,7 @@ class confiGpio(object):
 			self.estadoPin = False
 			#GPIO.output(self.GPIOPin,GPIO.HIGH)
 			print("par", self.GPIOPin)
-			
-	def leer_pin(self):
+
+	def readPin(self):
 		#return GPIO.input(self.GPIOPin)
 		return False
