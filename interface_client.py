@@ -1,12 +1,21 @@
 from tkinter import *
 from tkinter import ttk, messagebox
+
 from file_reading import *
 from watering import *
+
+import json
 import datetime
 import time
 import threading
+import socket
 
 state = [False,False,False]
+
+port = 12351
+HEADERSIZE = 10
+sockt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sockt.connect(('127.0.0.1' port))
 
 class App():
 
@@ -15,23 +24,24 @@ class App():
         self.root.title("Tabs")
 
         self.root.geometry('400x250')
+        self.tab_control = ttk.Notebook(self.root)
+
         self.label1 = ttk.Label(self.root, text="hola"                  )
         self.label2 = ttk.Label(self.root, text="Estado: Funcionando...")
         self.label3 = ttk.Label(self.root, text="by: hola"              )
 
         self.separ1 = ttk.Separator(self.root, orient=HORIZONTAL, style="line.TSeparator")
 
-        self.tab_control = ttk.Notebook(self.root)
         self.tab     = []
         self.buttons = []
-
-        self.tabs()
 
         self.label1.place(x=50,  y=50 )
         self.label2.place(x=195, y=50 )
         self.label3.place(x=5,   y=230)
 
         self.separ1.place(x=5,   y=95, bordermode=OUTSIDE, height=10, width=390)
+
+        self.tabs()
         
         self.clock()
     
@@ -59,68 +69,47 @@ class App():
 
         self.tab_control.pack(expand=100, fill='both')
 
+    def client(self):
+        full_msg = ''
+        new_msg = True
+        msg = sockt.recv(16)
+        if new_msg:
+            print("new msg len:",msg[:HEADERSIZE])
+            msglen = int(msg[:HEADERSIZE])
+            new_msg = False
 
+        while len(full_msg)-HEADERSIZE == msglen:
+            full_msg += msg.decode("utf-8")
 
-    def clock(self):#################33
-        self.label1.configure(text=time.strftime("%H : %M : %S    Dia: ")+str(datetime.datetime.today().weekday()+1))
-        if(state[1] == True):
-            self.label2.configure(text="Estado: riego manual")
-        elif(state[2] == True):
+        data = json.loads(full_msg)
+        return data
+
+    def clock(self):#################3hay que hacerlo con todooooooos
+        self.label1.configure(
+            text=time.strftime("%H : %M : %S    Dia: ") +
+            str(datetime.datetime.today().weekday()+1)
+            )
+
+        state = self.client()['state_areas'][0]
+        try:
+            if(state['is_manual']):
+                self.label2.configure(text="Estado: riego manual")
+            elif(state['is_watering']):
+                self.label2.configure(text="Estado: regando Auto, zon: "+str(state['active_area']))
+            else:
+                self.label2.configure(text="Estado: funcionando...")
+        except:
             self.label2.configure(text="Estado: off")
-        elif(not state[0] == False):
-            self.label2.configure(text="Estado: regando Auto, zon: "+str(state[0]))
-        else:
-            self.label2.configure(text="Estado: funcionando...")
+
         self.root.after(1000, self.clock)
 
     def stop(self):
         self.root.destroy()
     def manual(self,pos):
-        a.watering.manual()
+        pass
+        #a.watering.manual()
     def next(self):
         pass
 
 
-
-class wateringLoops():
-    def __init__(self, name, data):
-        self.data = data
-
-        self.watering = watering(data[0], data[1], data[2], data[3], data[4])#zon, t, T_ini, pin, dia
-        self.thread = threading.Thread(target=self.bucle, args=())
-        self.thread.start()
-
-    def bucle(self):
-        while True:
-            global state
-            self.watering.check()
-            time.sleep(0.3)
-            '''if(state[1] == True):############33
-                self.watering.manual()'''
-            if(self.watering.is_watering):
-                state[0] = self.watering.active_area
-            elif(state[2] == True):
-                state[0] = False
-                state[2] = False
-                state[1] = False
-                quit()
-            else:
-                state[0] = self.watering.is_watering
-            state[1] = self.watering.is_manual
-
-def mainApp():
-    app = App()
-    
-MAIN_AREAS = []
-
-def waterings():
-    for w in read():
-        print(w,read()[w])
-        try:
-            MAIN_AREAS.append(wateringLoops(w,read()[w]))
-        except:
-            print("E5")
-
-#th1 = threading.Thread(target=mainApp, args=())
-#th1.start()
-waterings()
+app = App()

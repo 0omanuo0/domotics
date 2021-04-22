@@ -24,7 +24,8 @@ class watering(object):# clase principal riego
 		self.active_area   = 0
 		self.watering_time = 0
 		self.actual_time   = []
-		
+
+
 		self.gpioAreas = []# variable con los objetos de confiGPIO
 
 		for x in range(len(self.pin_areas)):#crear cada objeto confiGpio para la lista
@@ -38,17 +39,21 @@ class watering(object):# clase principal riego
 
 
 	def check(self):#comprobar cada subzona si se inicia usar en el bucle principal !!!falta btn next!!!
-		if (self.checkWeekday()):### dia de la semana
+		if (self.checkWeekday() or self.is_manual):### dia de la semana
 			if(not self.is_watering and not self.is_manual):
 				if (getTime() == self.time_init):
+					print('start normal')
 					self.is_watering = True
 					self.active_area = 0
 					self.actual_time = getTime('float')
 			elif(self.is_watering):
-				if(self.time[self.active_area] >= self.watering_time):
+				print('watering')
+				if(self.time[self.active_area] <= self.watering_time):
+					print("a",self.watering_time,self.time[self.active_area],self.active_area)
 					if(len(self.areas) > self.active_area + 1):
 						self.active_area += 1
 					else:
+						print('stop')
 						self.active_area = 0
 						self.is_watering = False
 						self.is_manual   = False
@@ -62,7 +67,8 @@ class watering(object):# clase principal riego
 
 
 	def manual(self):
-		self.is_manual   = True if not self.is_manual else False
+		print('manual')
+		self.is_manual   = True #if not self.is_manual else False
 		self.is_watering = True
 		self.actual_time = getTime('float')
 

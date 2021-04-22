@@ -18,11 +18,12 @@ class confiGpio(object):
 		if self.mod == 'out':# tipo de pin(salida o entrada)
 			#GPIO.setup(self.GPIOPin, GPIO.OUT)
 			print(self.GPIOPin, self.mod)
+			self.changeState(True)
+			self.changeState(False)
 		elif self.mod == 'in':
 			#GPIO.setup(self.GPIOPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 			print(self.GPIOPin, self.mod)
-			self.changeState(True)
-			self.changeState(False)
+
 		
 
 	def changeState(self, llamarPin):

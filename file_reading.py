@@ -28,16 +28,18 @@ escribirParam("riego", True)
 print(leer())
 ''''''
 nombreSub1 = ["cesped1", "cesped2", "casped3"]
+tini1 = [10,42]
 pinSub1 = [1,2,3]
 tSub1 = [10, 13, 12]
 week1 = {0:True, 1:True, 2:False, 3:True, 4:True, 5:False, 6:True}
-Sub1 = [nombreSub1, pinSub1, tSub1, week1]
+Sub1 = [nombreSub1, tSub1, tini1, pinSub1,  week1]
 
 nombreSub2 = ["frontal", "todo lo demas", "olivos"]
+tini2 = [10,42]
 pinSub2 = [4,6,5]
 tSub2 = [11, 20, 50]
 week2 = {0:True, 1:True, 2:True, 3:True, 4:True, 5:True, 6:True}
-Sub2 = [nombreSub2, pinSub2, tSub2, week2]
+Sub2 = [nombreSub2, tSub2, tini2, pinSub2,  week2]
 
 
 
