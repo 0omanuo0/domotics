@@ -12,10 +12,10 @@ import socket
 
 state = [False,False,False]
 
-port = 12351
+port = 1235
 HEADERSIZE = 10
 sockt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sockt.connect(('127.0.0.1' port))
+sockt.connect((socket.gethostname(), port))
 
 class App():
 
@@ -71,17 +71,17 @@ class App():
 
     def client(self):
         full_msg = ''
-        new_msg = True
         msg = sockt.recv(16)
-        if new_msg:
-            print("new msg len:",msg[:HEADERSIZE])
-            msglen = int(msg[:HEADERSIZE])
-            new_msg = False
-
-        while len(full_msg)-HEADERSIZE == msglen:
+        full_msg += msg.decode("utf-8")
+        msglen = int(msg[:HEADERSIZE])
+        print(len(full_msg)-HEADERSIZE, msglen)
+        while len(full_msg)-HEADERSIZE != msglen:
+            msg = sockt.recv(16)
             full_msg += msg.decode("utf-8")
-
-        data = json.loads(full_msg)
+            print(msg)
+        print(full_msg)
+        data = json.loads(full_msg[HEADERSIZE:])
+        print(data)
         return data
 
     def clock(self):#################3hay que hacerlo con todooooooos
@@ -91,6 +91,7 @@ class App():
             )
 
         state = self.client()['state_areas'][0]
+        
         try:
             if(state['is_manual']):
                 self.label2.configure(text="Estado: riego manual")
@@ -100,7 +101,6 @@ class App():
                 self.label2.configure(text="Estado: funcionando...")
         except:
             self.label2.configure(text="Estado: off")
-
         self.root.after(1000, self.clock)
 
     def stop(self):

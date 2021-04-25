@@ -1,23 +1,24 @@
-import threading
-import time
+from pynput import keyboard
 
-a = 1
+# The key combination to check
+COMBINATIONS = [
+    {keyboard.Key.shift, keyboard.KeyCode(char='a')},
+    {keyboard.Key.shift, keyboard.KeyCode(char='A')}
+]
 
-def func1():
-	global a
-	while True:
-		print("1====>  ",a)
-		a+=1
-		time.sleep(1)
-def func2():
-	global a
-	while True:
-		print("2====>  ",a)
-		a+=1
-		time.sleep(1)
+# The currently active modifiers
+current = set()
 
-th1 = threading.Thread(target=func1, args=())
+def execute():
+    print ("Do Something")
 
-th2 = threading.Thread(target=func2, args=())
-th1.start()
-th2.start()
+def on_press(key):
+    if any([key in COMBO for COMBO in COMBINATIONS]):
+        current.add(key)
+        if any(all(k in current for k in COMBO) for COMBO in COMBINATIONS):
+            print('gho')
+            current.remove(key)
+
+
+listener = keyboard.Listener(on_press=on_press)
+listener.join()

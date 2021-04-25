@@ -1,37 +1,21 @@
-# first of all import the socket library 
-import socket             
-  
-# next create a socket object 
-servers = socket.socket()         
-print ("Socket successfully created")
-  
-# reserve a port on your computer in our 
-# case it is 12345 but it can be anything 
-port = 12348              
-  
-# Next bind to the port 
-# we have not typed any ip in the ip field 
-# instead we have inputted an empty string 
-# this makes the server listen to requests 
-# coming from other computers on the network 
-servers.bind(('', port))         
-print ("socket binded to %s" %(port)) 
-  
-# put the socket into listening mode 
-servers.listen(5)     
-print ("socket is listening")            
-  
-# a forever loop until we interrupt it or 
-# an error occurs 
-while True: 
-  
-    # Establish connection with client. 
-    c, addr = servers.accept()     
-    print ('Got connection from', addr )
-    
-    # send a thank you message to the client. 
-    c.send(b'Thank you for connecting') 
-    print (c.recv(1024))
-    
-    # Close the connection with the client 
-    c.close() 
+import socket
+import time
+import json
+
+
+HEADERSIZE = 10
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind((socket.gethostname(), 1244))
+s.listen(5)
+
+while True:
+    # now our endpoint knows about the OTHER endpoint.
+    clientsocket, address = s.accept()
+    print(f"Connection from {address} has been established.")
+
+    msg = {'hola':[1,2,3,4],'adios':[5,6,7,8]}
+    msg = json.dumps(msg)
+    msg = f"{len(msg):<{HEADERSIZE}}"+msg
+
+    clientsocket.send(bytes(msg,"utf-8"))

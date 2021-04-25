@@ -9,7 +9,7 @@ from watering import *
 MAIN_AREAS = []
 
 HEADERSIZE = 10
-port = 12350
+port = 1235
 
 data = {}
 
@@ -20,7 +20,7 @@ def send_data():
     print("·")
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    s.bind(('127.0.0.1', port))
+    s.bind((socket.gethostname(), port))
     s.listen(5)
     while True:
         clientsocket, address = s.accept()
@@ -38,6 +38,7 @@ def waterings():
             print("E5")
     print("A")
     while is_watering_active:
+        global data
         state = []
         for w in MAIN_AREAS:
             w.tick()
